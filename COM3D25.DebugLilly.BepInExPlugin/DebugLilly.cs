@@ -1,21 +1,21 @@
 ﻿using BepInEx;
 using BepInEx.Bootstrap;
 using BepInEx.Logging;
-using COM3D2.LillyUtill;
+using COM3D25.LillyUtill;
 using MaidStatus;
 using System;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
-
-namespace COM3D25.DebugLilly.BepInExPlugin
+namespace COM3D2.DebugLilly.BepInExPlugin
 {
     class MyAttribute
     {
         public const string PLAGIN_NAME = "DebugLilly";
-        public const string PLAGIN_VERSION = "22.02.22";
+        public const string PLAGIN_VERSION = "22.02.16.02";
         public const string PLAGIN_FULL_NAME = "COM3D2.DebugLilly.Plugin";
     }
 
@@ -24,10 +24,18 @@ namespace COM3D25.DebugLilly.BepInExPlugin
     public class DebugLilly : BaseUnityPlugin
     {
         public static MyLog log;
+        public static Stopwatch stopwatch;
+
+        public DebugLilly()
+        {
+            stopwatch = new Stopwatch(); //객체 선언
+            stopwatch.Start(); // 시간측정 시작
+        }
 
         public void Awake()
         {
             log = new MyLog(Logger, Config);
+            log.LogMessage($"Awake {stopwatch.Elapsed}");
 
             log.LogMessage("=== DebugLilly ===");
             log.LogDarkBlue("=== GetGameInfo st ===");
@@ -247,12 +255,18 @@ namespace COM3D25.DebugLilly.BepInExPlugin
      */
         }
 
+        public void OnEnable()
+        {
+            log.LogMessage($"OnEnable {stopwatch.Elapsed}");
+            SceneManager.sceneLoaded += this.OnSceneLoaded;
+        }
+
         /// <summary>
         /// UI 번역 영향 없는듯
         /// </summary>
         public void Start()
         {
-            log.LogMessage("Start");
+            log.LogMessage($"Start {stopwatch.Elapsed}");
             log.LogMessage("=== DebugLilly ===");
             log.LogDarkBlue("=== GetGameInfo st ===");
             // GameMain.Instance.SerializeStorageManager.StoreDirectoryPath 는 Awake에서 못씀
@@ -341,8 +355,18 @@ namespace COM3D25.DebugLilly.BepInExPlugin
 
             log.LogDarkBlue("=== GetGameInfo ed ===");
         }
-        /*
-    */
+
+        public void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
+            log.LogMessage($"OnSceneLoaded {scene.name} {scene.buildIndex} {stopwatch.Elapsed}");
+        }
+
+        public void OnDisable()
+        {
+            log.LogMessage($"OnDisable {stopwatch.Elapsed}");
+            SceneManager.sceneLoaded -= this.OnSceneLoaded;
+        }
+
         private static void LogFolder(string storeDirectoryPath)
         {
             log.LogDarkBlue("=== DirectoryInfo st === " + storeDirectoryPath);

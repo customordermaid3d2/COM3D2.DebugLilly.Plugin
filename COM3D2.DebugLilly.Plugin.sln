@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "COM3D2.DebugLilly.Plugin", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "COM3D2.DebugLilly.BepInExPlugin", "COM3D2.DebugLilly.BepInExPlugin\COM3D2.DebugLilly.BepInExPlugin.csproj", "{2A949BE2-942B-4881-B771-A5950A3BFA56}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "COM3D25.DebugLilly.BepInExPlugin", "COM3D25.DebugLilly.BepInExPlugin\COM3D25.DebugLilly.BepInExPlugin.csproj", "{1AD6546C-B2EF-4716-B077-B9957C1CF5D2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{2A949BE2-942B-4881-B771-A5950A3BFA56}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2A949BE2-942B-4881-B771-A5950A3BFA56}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2A949BE2-942B-4881-B771-A5950A3BFA56}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1AD6546C-B2EF-4716-B077-B9957C1CF5D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1AD6546C-B2EF-4716-B077-B9957C1CF5D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1AD6546C-B2EF-4716-B077-B9957C1CF5D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1AD6546C-B2EF-4716-B077-B9957C1CF5D2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
