@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32112.339
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "COM3D2.DebugLilly.Plugin", "COM3D2.DebugLilly.Plugin\COM3D2.DebugLilly.Plugin.csproj", "{09A63991-9D68-4776-8C93-C0D3D19A183F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "COM3D2.DebugLilly.BepInExPlugin", "COM3D2.DebugLilly.BepInExPlugin\COM3D2.DebugLilly.BepInExPlugin.csproj", "{2A949BE2-942B-4881-B771-A5950A3BFA56}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{09A63991-9D68-4776-8C93-C0D3D19A183F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{09A63991-9D68-4776-8C93-C0D3D19A183F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{09A63991-9D68-4776-8C93-C0D3D19A183F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{09A63991-9D68-4776-8C93-C0D3D19A183F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A949BE2-942B-4881-B771-A5950A3BFA56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A949BE2-942B-4881-B771-A5950A3BFA56}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A949BE2-942B-4881-B771-A5950A3BFA56}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A949BE2-942B-4881-B771-A5950A3BFA56}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F647BE85-2B1D-4361-B735-FD96E3543C60}
+	EndGlobalSection
+EndGlobal
