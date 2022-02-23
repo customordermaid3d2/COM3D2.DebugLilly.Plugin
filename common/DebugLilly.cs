@@ -1,7 +1,7 @@
 ﻿using BepInEx;
 using BepInEx.Bootstrap;
 using BepInEx.Logging;
-using COM3D25.LillyUtill;
+using COM3D2.LillyUtill;
 using HarmonyLib;
 using MaidStatus;
 using System;
@@ -11,7 +11,7 @@ using System.Reflection;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace COM3D25.DebugLilly.BepInExPlugin
+namespace COM3D2.DebugLilly.BepInExPlugin
 {
     class MyAttribute
     {

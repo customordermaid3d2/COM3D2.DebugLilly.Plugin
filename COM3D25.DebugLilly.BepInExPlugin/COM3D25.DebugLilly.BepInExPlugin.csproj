@@ -7,7 +7,7 @@
     <ProjectGuid>{1AD6546C-B2EF-4716-B077-B9957C1CF5D2}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>COM3D25.DebugLilly.BepInExPlugin</RootNamespace>
+    <RootNamespace>COM3D2.DebugLilly.BepInExPlugin</RootNamespace>
     <AssemblyName>COM3D25.DebugLilly.BepInExPlugin</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -54,8 +54,8 @@
     <Reference Include="COM3D2.API">
       <HintPath>H:\COM3D2_5\BepinEx\plugins\COM3D2.API.dll</HintPath>
     </Reference>
-    <Reference Include="COM3D25.LillyUtill">
-      <HintPath>H:\COM3D2_5\BepinEx\plugins\COM3D25.LillyUtill.dll</HintPath>
+    <Reference Include="COM3D2.LillyUtill">
+      <HintPath>H:\COM3D2_5\BepinEx\plugins\COM3D2.LillyUtill.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Cecil, Version=0.10.4.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e, processorArchitecture=MSIL">
       <HintPath>..\packages\Mono.Cecil.0.10.4\lib\net35\Mono.Cecil.dll</HintPath>
@@ -86,9 +86,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DebugLilly.cs" />
+    <Compile Include="..\common\DebugLilly.cs">
+      <Link>DebugLilly.cs</Link>
+    </Compile>
+    <Compile Include="..\common\StopwatchPatch.cs">
+      <Link>StopwatchPatch.cs</Link>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StopwatchPatch.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

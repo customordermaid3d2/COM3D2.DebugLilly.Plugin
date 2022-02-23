@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using Yotogis;
 
-namespace COM3D25.DebugLilly.BepInExPlugin
+namespace COM3D2.DebugLilly.BepInExPlugin
 {
     internal static class StopwatchPatch
     {
