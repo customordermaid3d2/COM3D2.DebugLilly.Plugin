@@ -88,6 +88,7 @@
   <ItemGroup>
     <Compile Include="DebugLilly.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StopwatchPatch.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

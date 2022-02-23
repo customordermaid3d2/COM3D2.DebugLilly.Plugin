@@ -2,6 +2,7 @@
 using BepInEx.Bootstrap;
 using BepInEx.Logging;
 using COM3D25.LillyUtill;
+using HarmonyLib;
 using MaidStatus;
 using System;
 using System.Diagnostics;
@@ -10,12 +11,12 @@ using System.Reflection;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace COM3D2.DebugLilly.BepInExPlugin
+namespace COM3D25.DebugLilly.BepInExPlugin
 {
     class MyAttribute
     {
         public const string PLAGIN_NAME = "DebugLilly";
-        public const string PLAGIN_VERSION = "22.02.16.02";
+        public const string PLAGIN_VERSION = "22.2.22";
         public const string PLAGIN_FULL_NAME = "COM3D2.DebugLilly.Plugin";
     }
 
@@ -25,6 +26,7 @@ namespace COM3D2.DebugLilly.BepInExPlugin
     {
         public static MyLog log;
         public static Stopwatch stopwatch;
+        public static Harmony stopwatchPatch;
 
         public DebugLilly()
         {
@@ -35,7 +37,18 @@ namespace COM3D2.DebugLilly.BepInExPlugin
         public void Awake()
         {
             log = new MyLog(Logger, Config);
-            log.LogMessage($"Awake {stopwatch.Elapsed}");
+            log.LogMessage($"https://github.com/customordermaid3d2/COM3D2.DebugLilly.Plugin");
+            log.LogMessage($"Awake , {stopwatch.Elapsed}");
+
+            StopwatchPatch.Awake(Logger, Config, stopwatch);
+            try
+            {
+                stopwatchPatch = Harmony.CreateAndPatchAll(typeof(StopwatchPatch));
+            }
+            catch (Exception e)
+            {
+                log.LogFatal($"Harmony {e.ToString()}");
+            }
 
             log.LogMessage("=== DebugLilly ===");
             log.LogDarkBlue("=== GetGameInfo st ===");
@@ -257,7 +270,7 @@ namespace COM3D2.DebugLilly.BepInExPlugin
 
         public void OnEnable()
         {
-            log.LogMessage($"OnEnable {stopwatch.Elapsed}");
+            log.LogMessage($"OnEnable , {stopwatch.Elapsed}");
             SceneManager.sceneLoaded += this.OnSceneLoaded;
         }
 
@@ -266,7 +279,7 @@ namespace COM3D2.DebugLilly.BepInExPlugin
         /// </summary>
         public void Start()
         {
-            log.LogMessage($"Start {stopwatch.Elapsed}");
+            log.LogMessage($"Start , {stopwatch.Elapsed}");
             log.LogMessage("=== DebugLilly ===");
             log.LogDarkBlue("=== GetGameInfo st ===");
             // GameMain.Instance.SerializeStorageManager.StoreDirectoryPath 는 Awake에서 못씀
@@ -358,12 +371,12 @@ namespace COM3D2.DebugLilly.BepInExPlugin
 
         public void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
-            log.LogMessage($"OnSceneLoaded {scene.name} {scene.buildIndex} {stopwatch.Elapsed}");
+            log.LogMessage($"OnSceneLoaded , {scene.name} , {scene.buildIndex} , {stopwatch.Elapsed}");
         }
 
         public void OnDisable()
         {
-            log.LogMessage($"OnDisable {stopwatch.Elapsed}");
+            log.LogMessage($"OnDisable , {stopwatch.Elapsed}");
             SceneManager.sceneLoaded -= this.OnSceneLoaded;
         }
 
