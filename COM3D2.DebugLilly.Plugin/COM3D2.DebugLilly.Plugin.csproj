@@ -118,8 +118,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy "$(targetpath)"  "C:\Downloads\plugin\Sybaris\UnityInjector"
-copy "$(targetpath)" "H:\COM3D2\Sybaris\UnityInjector"
+    <PostBuildEvent>copy "$(targetpath)" "H:\COM3D2\Sybaris\UnityInjector"
 copy "$(targetpath)" "H:\COM3D2-test\Sybaris\UnityInjector"
 </PostBuildEvent>
   </PropertyGroup>

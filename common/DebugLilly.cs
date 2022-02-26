@@ -1,7 +1,6 @@
 ﻿using BepInEx;
 using BepInEx.Bootstrap;
 using BepInEx.Logging;
-using COM3D2.LillyUtill;
 using HarmonyLib;
 using MaidStatus;
 using System;
@@ -24,9 +23,11 @@ namespace COM3D2.DebugLilly.BepInExPlugin
     [BepInPlugin(MyAttribute.PLAGIN_FULL_NAME, MyAttribute.PLAGIN_NAME, MyAttribute.PLAGIN_VERSION)]
     public class DebugLilly : BaseUnityPlugin
     {
-        public static MyLog log;
+        //public static MyLog log;
+        public static ManualLogSource log;
         public static Stopwatch stopwatch;
         public static Harmony stopwatchPatch;
+        public static Harmony debugLillyPatch;
 
         public DebugLilly()
         {
@@ -36,11 +37,14 @@ namespace COM3D2.DebugLilly.BepInExPlugin
 
         public void Awake()
         {
-            log = new MyLog(Logger, Config);
+            //log = new MyLog(Logger, Config);
+            log = Logger;
             log.LogMessage($"https://github.com/customordermaid3d2/COM3D2.DebugLilly.Plugin");
             log.LogMessage($"Awake , {stopwatch.Elapsed}");
 
             StopwatchPatch.Awake(Logger, Config, stopwatch);
+            DebugLillyPatch.Awake( Logger, Config);
+
             try
             {
                 stopwatchPatch = Harmony.CreateAndPatchAll(typeof(StopwatchPatch));
@@ -48,10 +52,18 @@ namespace COM3D2.DebugLilly.BepInExPlugin
             catch (Exception e)
             {
                 log.LogFatal($"Harmony {e.ToString()}");
+            }            
+            try
+            {
+                debugLillyPatch = Harmony.CreateAndPatchAll(typeof(DebugLillyPatch));
+            }
+            catch (Exception e)
+            {
+                log.LogFatal($"Harmony {e.ToString()}");
             }
 
             log.LogMessage("=== DebugLilly ===");
-            log.LogDarkBlue("=== GetGameInfo st ===");
+            log.LogMessage("=== GetGameInfo st ===");
 
             if (File.Exists(Path.Combine(Environment.CurrentDirectory, "BepInEx\\LillyPack.dat ")))
                 log.LogMessage($"LillyPack version { File.ReadAllText(Path.Combine(Environment.CurrentDirectory, "BepInEx\\LillyPack.dat "))}");
@@ -87,7 +99,7 @@ namespace COM3D2.DebugLilly.BepInExPlugin
 
             log.LogMessage("GameUty.IsEnabledCompatibilityMode : " + GameUty.IsEnabledCompatibilityMode);
 
-            log.LogDarkBlue("=== PluginInfos ===");
+            log.LogMessage("=== PluginInfos ===");
             try
             {
                 foreach (var item in Chainloader.PluginInfos)
@@ -100,11 +112,11 @@ namespace COM3D2.DebugLilly.BepInExPlugin
                 log.LogWarning("Awake:" + e.ToString());
             }
 
-            log.LogDarkBlue("=== SybarisLoader ===");
+            log.LogMessage("=== SybarisLoader ===");
 
             try
             {
-                foreach (string text in Directory.GetFiles(BepInEx.SybarisLoader.Patcher.Util.Utils.SybarisDir.Value, "*.Patcher.dll"))
+                foreach (string text in Directory.GetFiles(Path.Combine(Environment.CurrentDirectory, @"Sybaris"), "*.Patcher.dll"))
                 {
                     Assembly assembly;
                     try
@@ -129,11 +141,11 @@ namespace COM3D2.DebugLilly.BepInExPlugin
                 log.LogWarning("SybarisLoader:" + e.ToString());
             }
 
-            log.LogDarkBlue("=== UnityInjector ===");
+            log.LogMessage("=== UnityInjector ===");
 
             try
             {
-                foreach (string text in Directory.GetFiles(Path.Combine(BepInEx.SybarisLoader.Patcher.Util.Utils.SybarisDir.Value, "UnityInjector"), "*.dll"))
+                foreach (string text in Directory.GetFiles(Path.Combine(Environment.CurrentDirectory, @"Sybaris\UnityInjector"), "*.dll"))
                 {
                     Assembly assembly;
                     try
@@ -170,7 +182,7 @@ namespace COM3D2.DebugLilly.BepInExPlugin
             #endregion
             /*
             */
-            log.LogDarkBlue("===  ===");
+            log.LogMessage("===  ===");
 
 
             try
@@ -178,9 +190,6 @@ namespace COM3D2.DebugLilly.BepInExPlugin
                // 오류 영역?
 
                 //log.LogMessage("Product.windowTitel : " + Product.windowTitel);
-
-
-
 
 
                 #region UI번역영향 없음
@@ -202,8 +211,6 @@ namespace COM3D2.DebugLilly.BepInExPlugin
 
                 #endregion
 
-
-
             }
             catch (Exception e)
             {
@@ -215,7 +222,7 @@ namespace COM3D2.DebugLilly.BepInExPlugin
                 Type type = typeof(Misc);
                 foreach (var item in type.GetFields())
                 {
-                    log.LogMessage(type.Name, item.Name, item.GetValue(null));
+                    log.LogMessage($"{type.Name}, {item.Name}, {item.GetValue(null)}");
                 }
             }
             catch (Exception e)
@@ -224,8 +231,6 @@ namespace COM3D2.DebugLilly.BepInExPlugin
             }
             /*
         */
-
-
 
             /*
              * 추출 안됨
@@ -263,7 +268,7 @@ namespace COM3D2.DebugLilly.BepInExPlugin
 
 
 
-            log.LogDarkBlue("=== GetGameInfo ed ===");
+            log.LogMessage("=== GetGameInfo ed ===");
             /*
      */
         }
@@ -272,6 +277,26 @@ namespace COM3D2.DebugLilly.BepInExPlugin
         {
             log.LogMessage($"OnEnable , {stopwatch.Elapsed}");
             SceneManager.sceneLoaded += this.OnSceneLoaded;
+            if (stopwatchPatch ==null)
+            {
+            try
+            {
+                stopwatchPatch = Harmony.CreateAndPatchAll(typeof(StopwatchPatch));
+            }
+            catch (Exception e)
+            {
+                log.LogFatal($"Harmony {e.ToString()}");
+            }
+            }
+            if (debugLillyPatch == null)
+                try
+            {
+                debugLillyPatch = Harmony.CreateAndPatchAll(typeof(DebugLillyPatch));
+            }
+            catch (Exception e)
+            {
+                log.LogFatal($"Harmony {e.ToString()}");
+            }
         }
 
         /// <summary>
@@ -281,7 +306,7 @@ namespace COM3D2.DebugLilly.BepInExPlugin
         {
             log.LogMessage($"Start , {stopwatch.Elapsed}");
             log.LogMessage("=== DebugLilly ===");
-            log.LogDarkBlue("=== GetGameInfo st ===");
+            log.LogMessage("=== GetGameInfo st ===");
             // GameMain.Instance.SerializeStorageManager.StoreDirectoryPath 는 Awake에서 못씀
             log.LogMessage("StoreDirectoryPath : " + GameMain.Instance.SerializeStorageManager.StoreDirectoryPath);// Awake에서 못씀
             log.LogMessage("");
@@ -341,10 +366,10 @@ namespace COM3D2.DebugLilly.BepInExPlugin
             try
             {
                 var l = Personal.GetAllDatas(false);
-                log.LogMessage("성격 전체", l.Count);
+                log.LogMessage($"성격 전체 {l.Count}");
                 foreach (var item in l)
                 {
-                    log.LogMessage("Personal:", item.id, item.replaceText, item.uniqueName, item.drawName, item.termName);//
+                    log.LogMessage($"Personal:  {item.id}, {item.replaceText}, {item.uniqueName}, {item.drawName}, {item.termName}");//
                 }
             }
             catch (Exception e)
@@ -355,10 +380,10 @@ namespace COM3D2.DebugLilly.BepInExPlugin
             try
             {
                 var l = Personal.GetAllDatas(true);
-                log.LogMessage("성격 가능", l.Count);
+                log.LogMessage($"성격 가능 {l.Count}");
                 foreach (var item in l)
                 {
-                    log.LogMessage("Personal:", item.id, item.replaceText, item.uniqueName, item.drawName, item.termName);//
+                    log.LogMessage($"Personal:  {item.id}, {item.replaceText}, {item.uniqueName}, {item.drawName}, {item.termName}");//                    
                 }
             }
             catch (Exception e)
@@ -366,7 +391,7 @@ namespace COM3D2.DebugLilly.BepInExPlugin
                 log.LogWarning("Personal:" + e.ToString());
             }
 
-            log.LogDarkBlue("=== GetGameInfo ed ===");
+            log.LogMessage("=== GetGameInfo ed ===");
         }
 
         public void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -378,18 +403,20 @@ namespace COM3D2.DebugLilly.BepInExPlugin
         {
             log.LogMessage($"OnDisable , {stopwatch.Elapsed}");
             SceneManager.sceneLoaded -= this.OnSceneLoaded;
+            stopwatchPatch?.UnpatchSelf();
+            debugLillyPatch?.UnpatchSelf();
         }
 
         private static void LogFolder(string storeDirectoryPath)
         {
-            log.LogDarkBlue("=== DirectoryInfo st === " + storeDirectoryPath);
+            log.LogMessage("=== DirectoryInfo st === " + storeDirectoryPath);
             System.IO.DirectoryInfo di = new System.IO.DirectoryInfo(storeDirectoryPath);
             if (di.Exists)
                 foreach (System.IO.FileInfo File in di.GetFiles())
                 {
                     log.LogMessage(File.Name);
                 }
-            log.LogDarkBlue("=== DirectoryInfo ed ===");
+            log.LogMessage("=== DirectoryInfo ed ===");
         }
 
     }
