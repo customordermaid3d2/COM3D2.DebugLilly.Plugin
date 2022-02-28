@@ -45,12 +45,6 @@
     <Reference Include="BepInEx, Version=5.4.19.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\BepInEx.BaseLib.5.4.19\lib\net35\BepInEx.dll</HintPath>
     </Reference>
-    <Reference Include="BepInEx.SybarisLoader.Patcher">
-      <HintPath>H:\COM3D2_5\BepinEx\patchers\SybarisLoader\BepInEx.SybarisLoader.Patcher.dll</HintPath>
-    </Reference>
-    <Reference Include="BepInEx.UnityInjectorLoader">
-      <HintPath>H:\COM3D2_5\BepinEx\plugins\UnityInjectorLoader\BepInEx.UnityInjectorLoader.dll</HintPath>
-    </Reference>
     <Reference Include="COM3D2.API">
       <HintPath>H:\COM3D2_5\BepinEx\plugins\COM3D2.API.dll</HintPath>
     </Reference>

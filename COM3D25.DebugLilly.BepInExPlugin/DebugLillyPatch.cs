@@ -55,7 +55,10 @@ namespace COM3D2.DebugLilly.BepInExPlugin
             //
             ScriptManagerLog = config.Bind("ScriptManager", "Log", false);
             ScriptManager_EvalScript_Log = config.Bind("ScriptManager", "EvalScript Log", false);
-            ScriptManager_ReplacePersonal_Log = config.Bind("ScriptManager", "ReplacePersonal Log", true);
+            ScriptManager_ReplacePersonal_Log = config.Bind("ScriptManager", "ReplacePersonal Log", false);
+
+            //
+            Status_SetFlag_Log = config.Bind("Status", "SetFlag_Log", false);
 
             //
             TJSScriptLog = config.Bind("TJSScript", "Log", false);
@@ -193,8 +196,6 @@ namespace COM3D2.DebugLilly.BepInExPlugin
         }
 
         #endregion
-
-
 
         #region GameMain
 
@@ -426,6 +427,25 @@ namespace COM3D2.DebugLilly.BepInExPlugin
             {
                 log.LogMessage($"ScriptManager.ReplacePersonal_post , {maid_array.Length} , {text} , {__result} , {GameUty.IsExistFile(__result)}");
                 ;
+            }
+
+        }
+
+        #endregion
+
+        #region Status
+
+        internal static ConfigEntry<bool> Status_SetFlag_Log;
+
+        [HarmonyPatch(typeof(MaidStatus.Status), "SetFlag")]
+        [HarmonyPatch(typeof(MaidStatus.Old.Status), "SetFlag")]
+        [HarmonyPostfix]
+        public static void SetFlag(string flagName, int value)
+        {
+            if (Status_SetFlag_Log.Value)
+            {
+                log.LogMessage($"Status.SetFlag , {flagName} , {value}");
+                
             }
 
         }

@@ -65,10 +65,13 @@ namespace COM3D2.DebugLilly.BepInExPlugin
             log.LogMessage("=== DebugLilly ===");
             log.LogMessage("=== GetGameInfo st ===");
 
-            if (File.Exists(Path.Combine(Environment.CurrentDirectory, "BepInEx\\LillyPack.dat ")))
-                log.LogMessage($"LillyPack version { File.ReadAllText(Path.Combine(Environment.CurrentDirectory, "BepInEx\\LillyPack.dat "))}");
+            if (File.Exists(Path.Combine(Environment.CurrentDirectory, "BepInEx\\LillyPack.dat")))
+                log.LogMessage($"LillyPack version { File.ReadAllText(Path.Combine(Environment.CurrentDirectory, "BepInEx\\LillyPack.dat"))}");
             else
                 log.LogMessage("no LillyPack?");
+            
+            if (File.Exists(Path.Combine(Environment.CurrentDirectory, "COM3D2x64_Data\\Pack.dat")))
+                log.LogMessage($"Pack version { File.ReadAllText(Path.Combine(Environment.CurrentDirectory, "COM3D2x64_Data\\Pack.dat"))}");
 
             log.LogMessage("Application.installerName : " + Application.installerName);
             log.LogMessage("Application.version : " + Application.version);
@@ -141,8 +144,8 @@ namespace COM3D2.DebugLilly.BepInExPlugin
                 log.LogWarning("SybarisLoader:" + e.ToString());
             }
 
+#if UnityInjector
             log.LogMessage("=== UnityInjector ===");
-
             try
             {
                 foreach (string text in Directory.GetFiles(Path.Combine(Environment.CurrentDirectory, @"Sybaris\UnityInjector"), "*.dll"))
@@ -178,8 +181,8 @@ namespace COM3D2.DebugLilly.BepInExPlugin
             {
                 log.LogWarning("UnityInjector:" + e.ToString());
             }
-
-            #endregion
+#endif
+#endregion
             /*
             */
             log.LogMessage("===  ===");
@@ -192,7 +195,7 @@ namespace COM3D2.DebugLilly.BepInExPlugin
                 //log.LogMessage("Product.windowTitel : " + Product.windowTitel);
 
 
-                #region UI번역영향 없음
+#region UI번역영향 없음
 
                 log.LogMessage("Product.lockDLCSiteLink : " + Product.lockDLCSiteLink);
                 log.LogMessage("Product.enabeldAdditionalRelation : " + Product.enabeldAdditionalRelation);
@@ -209,7 +212,7 @@ namespace COM3D2.DebugLilly.BepInExPlugin
                 log.LogMessage("Product.supportMultiLanguage : " + Product.supportMultiLanguage);
                 log.LogMessage("Product.systemLanguage : " + Product.systemLanguage);
 
-                #endregion
+#endregion
 
             }
             catch (Exception e)
