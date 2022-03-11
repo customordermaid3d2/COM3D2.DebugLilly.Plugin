@@ -199,18 +199,18 @@ namespace COM3D2.DebugLilly.BepInExPlugin
 
         [HarmonyPatch(typeof(DLLKagScript), "SetTagCallEnabled")]
         [HarmonyPrefix]
-        public static void SetTagCallEnabled(string tag_name)
+        public static void SetTagCallEnabled(bool enabled)
         {
             if (DLLKagScriptLog.Value)
-                log.LogMessage("DLLKagScript.SetTagCallEnabled: " + tag_name);
+                log.LogMessage("DLLKagScript.SetTagCallEnabled: " + enabled);
         }
 
         [HarmonyPatch(typeof(DLLKagScript), "SetTagReturnEnabled")]
         [HarmonyPrefix]
-        public static void SetTagReturnEnabled(string tag_name)
+        public static void SetTagReturnEnabled(bool enabled)
         {
             if (DLLKagScriptLog.Value)
-                log.LogMessage("DLLKagScript.SetTagReturnEnabled: " + tag_name);
+                log.LogMessage("DLLKagScript.SetTagReturnEnabled: " + enabled);
         }
 
         #endregion
@@ -281,6 +281,66 @@ namespace COM3D2.DebugLilly.BepInExPlugin
         internal static ConfigEntry<bool> KagScript_ExecLog;
         internal static ConfigEntry<bool> KagScript_OnScenarioLoadEventLog;
 
+        [HarmonyPatch(typeof(KagScript), "CallOnCallEvent")]
+        [HarmonyPrefix]
+        public static void CallOnCallEvent(string file_name, string label_name)
+        {
+            if (!KagScript_Log.Value) return;
+            log.LogMessage($"KagScript.CallOnCallEvent: {file_name} , {label_name}");
+        }
+        
+        [HarmonyPatch(typeof(KagScript), "CallOnRCallEvent")]
+        [HarmonyPrefix]
+        public static void CallOnRCallEvent(string file_name, string label_name)
+        {
+            if (!KagScript_Log.Value) return;
+            log.LogMessage($"KagScript.CallOnRCallEvent: {file_name} , {label_name}");
+        }
+        
+        [HarmonyPatch(typeof(KagScript), "CallOnReturnEvent")]
+        [HarmonyPrefix]
+        public static void CallOnReturnEvent(string file_name, int line)
+        {
+            if (!KagScript_Log.Value) return;
+            log.LogMessage($"KagScript.CallOnReturnEvent: {file_name} , {line}");
+        }
+        
+        [HarmonyPatch(typeof(KagScript), "CallOnRReturnEvent")]
+        [HarmonyPrefix]
+        public static void CallOnRReturnEvent(string file_name, string label_name)
+        {
+            if (!KagScript_Log.Value) return;
+            log.LogMessage($"KagScript.CallOnRReturnEvent: {file_name} , {label_name}");
+        }
+        
+        [HarmonyPatch(typeof(KagScript), "CallOnLabelEvent")]
+        [HarmonyPrefix]
+        public static void CallOnLabelEvent(bool readed)
+        {
+            if (!KagScript_Log.Value) return;
+            log.LogMessage($"KagScript.CallOnLabelEvent: {readed}");
+        }
+        
+        
+        [HarmonyPatch(typeof(KagScript), "CallReplaceEvent")]
+        [HarmonyPrefix]
+        public static void CallReplaceEvent(string filename)
+        {
+            if (!KagScript_Log.Value) return;
+            log.LogMessage($"KagScript.CallReplaceEvent: {filename}");
+        }
+        
+
+        [HarmonyPatch(typeof(KagScript), "CallTag")]
+        [HarmonyPrefix]
+        public static void CallTag(ulong tag_key)
+        {
+            if (!KagScript_Log.Value) return;
+            log.LogMessage($"KagScript.Exec: {tag_key}");
+        }
+
+        
+
         [HarmonyPatch(typeof(KagScript), "Exec")]
         [HarmonyPrefix]
         public static void KagScript_Exec(string ___prev_tag_name_)
@@ -289,10 +349,7 @@ namespace COM3D2.DebugLilly.BepInExPlugin
             log.LogMessage($"KagScript.Exec: {___prev_tag_name_}");
         }
 
-        /// <summary>
-        /// KagScript.AddTagCallBack: faceblend
-        /// </summary>
-        /// <param name="tag_name"></param>
+
         [HarmonyPatch(typeof(KagScript), "AddTagCallBack")]
         [HarmonyPrefix]
         public static void KagScript_AddTagCallBack(string tag_name)
@@ -301,10 +358,7 @@ namespace COM3D2.DebugLilly.BepInExPlugin
             log.LogMessage($"KagScript.AddTagCallBack: {tag_name}");
         }
 
-        /// <summary>
-        ///  KagScript.RemoveTagCallBack: faceblend
-        /// </summary>
-        /// <param name="tag_name"></param>
+
         [HarmonyPatch(typeof(KagScript), "RemoveTagCallBack")]
         [HarmonyPrefix]
         public static void KagScript_RemoveTagCallBack(string tag_name)

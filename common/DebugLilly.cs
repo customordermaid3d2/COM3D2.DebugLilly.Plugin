@@ -271,7 +271,10 @@ namespace COM3D2.DebugLilly.BepInExPlugin
         {
             try
             {
-                stopwatchPatch = Harmony.CreateAndPatchAll(typeof(StopwatchPatch));
+                if (stopwatchPatch==null)
+                {
+                    stopwatchPatch = Harmony.CreateAndPatchAll(typeof(StopwatchPatch));
+                }
             }
             catch (Exception e)
             {
@@ -279,7 +282,8 @@ namespace COM3D2.DebugLilly.BepInExPlugin
             }
             try
             {
-                debugLillyPatch = Harmony.CreateAndPatchAll(typeof(DebugLillyPatch));
+                if (debugLillyPatch == null)
+                    debugLillyPatch = Harmony.CreateAndPatchAll(typeof(DebugLillyPatch));
             }
             catch (Exception e)
             {
