@@ -1,5 +1,6 @@
 ﻿using BepInEx;
 using BepInEx.Bootstrap;
+using BepInEx.Configuration;
 using BepInEx.Logging;
 using HarmonyLib;
 using MaidStatus;
@@ -29,6 +30,8 @@ namespace COM3D2.DebugLilly.BepInExPlugin
         public static Harmony stopwatchPatch;
         public static Harmony debugLillyPatch;
 
+        internal static ConfigEntry<bool> isEnabled;
+
         public DebugLilly()
         {
             stopwatch = new Stopwatch(); //객체 선언
@@ -42,25 +45,13 @@ namespace COM3D2.DebugLilly.BepInExPlugin
             log.LogMessage($"https://github.com/customordermaid3d2/COM3D2.DebugLilly.Plugin");
             log.LogMessage($"Awake , {stopwatch.Elapsed}");
 
-            StopwatchPatch.Awake(Logger, Config, stopwatch);
-            DebugLillyPatch.Awake( Logger, Config);
+            isEnabled = Config.Bind("plugin", "isEnabled", enabled);
+            isEnabled.SettingChanged += IsEnabled_SettingChanged;
 
-            try
-            {
-                stopwatchPatch = Harmony.CreateAndPatchAll(typeof(StopwatchPatch));
-            }
-            catch (Exception e)
-            {
-                log.LogFatal($"Harmony {e.ToString()}");
-            }            
-            try
-            {
-                debugLillyPatch = Harmony.CreateAndPatchAll(typeof(DebugLillyPatch));
-            }
-            catch (Exception e)
-            {
-                log.LogFatal($"Harmony {e.ToString()}");
-            }
+            StopwatchPatch.Awake(Logger, Config, stopwatch);
+            DebugLillyPatch.Awake(Logger, Config);
+
+            Patch();
 
             log.LogMessage("=== DebugLilly ===");
             log.LogMessage("=== GetGameInfo st ===");
@@ -69,7 +60,7 @@ namespace COM3D2.DebugLilly.BepInExPlugin
                 log.LogMessage($"LillyPack version { File.ReadAllText(Path.Combine(Environment.CurrentDirectory, "BepInEx\\LillyPack.dat"))}");
             else
                 log.LogMessage("no LillyPack?");
-            
+
             if (File.Exists(Path.Combine(Environment.CurrentDirectory, "COM3D2x64_Data\\Pack.dat")))
                 log.LogMessage($"Pack version { File.ReadAllText(Path.Combine(Environment.CurrentDirectory, "COM3D2x64_Data\\Pack.dat"))}");
 
@@ -182,7 +173,7 @@ namespace COM3D2.DebugLilly.BepInExPlugin
                 log.LogWarning("UnityInjector:" + e.ToString());
             }
 #endif
-#endregion
+            #endregion
             /*
             */
             log.LogMessage("===  ===");
@@ -190,12 +181,12 @@ namespace COM3D2.DebugLilly.BepInExPlugin
 
             try
             {
-               // 오류 영역?
+                // 오류 영역?
 
                 //log.LogMessage("Product.windowTitel : " + Product.windowTitel);
 
 
-#region UI번역영향 없음
+                #region UI번역영향 없음
 
                 log.LogMessage("Product.lockDLCSiteLink : " + Product.lockDLCSiteLink);
                 log.LogMessage("Product.enabeldAdditionalRelation : " + Product.enabeldAdditionalRelation);
@@ -212,14 +203,14 @@ namespace COM3D2.DebugLilly.BepInExPlugin
                 log.LogMessage("Product.supportMultiLanguage : " + Product.supportMultiLanguage);
                 log.LogMessage("Product.systemLanguage : " + Product.systemLanguage);
 
-#endregion
+                #endregion
 
             }
             catch (Exception e)
             {
                 log.LogWarning("Product:" + e.ToString());
             }
-        
+
             try
             {
                 Type type = typeof(Misc);
@@ -276,12 +267,8 @@ namespace COM3D2.DebugLilly.BepInExPlugin
      */
         }
 
-        public void OnEnable()
+        private static void Patch()
         {
-            log.LogMessage($"OnEnable , {stopwatch.Elapsed}");
-            SceneManager.sceneLoaded += this.OnSceneLoaded;
-            if (stopwatchPatch ==null)
-            {
             try
             {
                 stopwatchPatch = Harmony.CreateAndPatchAll(typeof(StopwatchPatch));
@@ -290,9 +277,7 @@ namespace COM3D2.DebugLilly.BepInExPlugin
             {
                 log.LogFatal($"Harmony {e.ToString()}");
             }
-            }
-            if (debugLillyPatch == null)
-                try
+            try
             {
                 debugLillyPatch = Harmony.CreateAndPatchAll(typeof(DebugLillyPatch));
             }
@@ -300,6 +285,18 @@ namespace COM3D2.DebugLilly.BepInExPlugin
             {
                 log.LogFatal($"Harmony {e.ToString()}");
             }
+        }
+
+        private void IsEnabled_SettingChanged(object sender, EventArgs e)
+        {
+            enabled = isEnabled.Value;
+        }
+
+        public void OnEnable()
+        {
+            log.LogMessage($"OnEnable , {stopwatch.Elapsed}");
+            SceneManager.sceneLoaded += this.OnSceneLoaded;
+            Patch();
         }
 
         /// <summary>

@@ -24,14 +24,14 @@ namespace COM3D2.DebugLilly.BepInExPlugin
 
             //
             baseKagManagerLog = config.Bind("baseKagManager", "Log", false);
-            baseKagManager_OnScenarioLoadEvent_Log = config.Bind("baseKagManager", "OnScenarioLoadEvent_Log", false);
+            baseKagManager_OnScenarioLoadEvent_Log = config.Bind("baseKagManager", "OnScenarioLoadEvent.Log", false);
 
             //
-            DLLKagScriptLog = config.Bind("DLLKagScript", "Log", false);
-            DLL_KAG_LoadScenarioStringLog = config.Bind("DLLKagScript", "DLL_KAG_LoadScenarioString Log", false);
-            DLL_KAG_LoadScriptFile_Log = config.Bind("DLLKagScript", "DLLKagScript_LoadScriptFile Log", false);
-            DLL_KAG_AddFinishFileLog = config.Bind("DLLKagScript", "DLL_KAG_AddFinishFile Log", false);
-            DLL_KAG_AddTagLog = config.Bind("DLLKagScript", "DLL_KAG_AddTag Log", false);
+            DLLKagScriptLog = config.Bind("DLLKagScript", "All.Log", false);
+            DLL_KAG_LoadScenarioStringLog = config.Bind("DLLKagScript", "LoadScenarioString.Log", false);
+            DLL_KAG_LoadScriptFile_Log = config.Bind("DLLKagScript", "LoadScriptFile.Log", false);
+            DLL_KAG_FinishFileLog = config.Bind("DLLKagScript", "FinishFile Log", false);
+            DLL_KAG_TagLog = config.Bind("DLLKagScript", "Tag Log", false);
 
             //
             DLLTJSScriptLog = config.Bind("DLLTJSScript", "Log", false);
@@ -43,22 +43,26 @@ namespace COM3D2.DebugLilly.BepInExPlugin
             KagScript_Log = config.Bind("KagScript", "Log", false);
             KagScript_TagCallLog = config.Bind("KagScript", "TagCall Log", false);
             KagScript_ExecLog = config.Bind("KagScript", "Exec Log", false);
-            KagScript_OnScenarioLoadEventLog = config.Bind("KagScript", "OnScenarioLoadEvent Log", false);
+            KagScript_OnScenarioLoadEventLog = config.Bind("KagScript", "OnScenarioLoadEvent.Log", false);
 
             //
-            Maid_SetProp_log = config.Bind("Maid", "SetProp Log", false);
-            Maid_EyeToCamera_log = config.Bind("Maid", "EyeToCamera Log", false);
+            Maid_SetProp_log = config.Bind("Maid", "SetProp.Log", false);
+            Maid_EyeToCamera_log = config.Bind("Maid", "EyeToCamera.Log", false);
 
             //
             PrivateMaidModeLog = config.Bind("ScenePrivateEventModeAwake", "Log", false);
 
             //
             ScriptManagerLog = config.Bind("ScriptManager", "Log", false);
-            ScriptManager_EvalScript_Log = config.Bind("ScriptManager", "EvalScript Log", false);
-            ScriptManager_ReplacePersonal_Log = config.Bind("ScriptManager", "ReplacePersonal Log", false);
+            ScriptManager_EvalScript_Log = config.Bind("ScriptManager", "EvalScript.Log", false);
+            ScriptManager_ReplacePersonal_Log = config.Bind("ScriptManager", "ReplacePersonal.Log", false);
 
             //
-            Status_SetFlag_Log = config.Bind("Status", "SetFlag_Log", false);
+            LoadScript_log = config.Bind("ScriptManagerFast", "BaseKagManagerFast.LoadScript.log", false);
+            jump_log = config.Bind("ScriptManagerFast", "BaseKagManagerFast.jump.log", false);
+
+            //
+            Status_SetFlag_Log = config.Bind("Status", "SetFlag.Log", false);
 
             //
             TJSScriptLog = config.Bind("TJSScript", "Log", false);
@@ -123,62 +127,90 @@ namespace COM3D2.DebugLilly.BepInExPlugin
         #region DLLKagScript
 
         internal static ConfigEntry<bool> DLLKagScriptLog;
+        internal static ConfigEntry<bool> DLL_KAG_TagLog;
         internal static ConfigEntry<bool> DLL_KAG_LoadScenarioStringLog;
         internal static ConfigEntry<bool> DLL_KAG_LoadScriptFile_Log;
-        internal static ConfigEntry<bool> DLL_KAG_AddFinishFileLog;
-        internal static ConfigEntry<bool> DLL_KAG_AddTagLog;
+        internal static ConfigEntry<bool> DLL_KAG_FinishFileLog;
 
-        [HarmonyPatch(typeof(DLLKagScript), "DLL_KAG_GoToLabel")]
+        [HarmonyPatch(typeof(DLLKagScript), "AddTag")]
         [HarmonyPrefix]
-        public static void DLL_KAG_GoToLabel(string label_name)
+        public static void AddTag(string tag_name)
         {
-            if (DLL_KAG_LoadScriptFile_Log.Value)
-                log.LogMessage("DLLKagScript.DLL_KAG_GoToLabel: " + label_name);
+            if (DLL_KAG_TagLog.Value)
+                log.LogMessage("DLLKagScript.AddTag: " + tag_name);
+        }
+        
+        [HarmonyPatch(typeof(DLLKagScript), "RemoveTag")]
+        [HarmonyPrefix]
+        public static void RemoveTag(string tag_name)
+        {
+            if (DLL_KAG_TagLog.Value)
+                log.LogMessage("DLLKagScript.RemoveTag: " + tag_name);
         }
 
-        [HarmonyPatch(typeof(DLLKagScript), "DLL_KAG_LoadScenario")]
+        [HarmonyPatch(typeof(DLLKagScript), "AddFinishFile")]
         [HarmonyPrefix]
-        public static void DLL_KAG_LoadScenario(string file_name)
+        public static void AddFinishFile(string file_name)
+        {
+            if (DLL_KAG_FinishFileLog.Value)
+                log.LogMessage("DLLKagScript.AddFinishFile: " + file_name);
+        }
+
+        [HarmonyPatch(typeof(DLLKagScript), "GetFinishFile")]
+        [HarmonyPrefix]
+        public static void GetFinishFile(string file_name)
+        {
+            if (DLL_KAG_FinishFileLog.Value)
+                log.LogMessage("DLLKagScript.GetFinishFile: " + file_name);
+        }
+
+        [HarmonyPatch(typeof(DLLKagScript), "GoToLabel")]
+        [HarmonyPrefix]
+        public static void GoToLabel(string label_name)
         {
             if (DLL_KAG_LoadScriptFile_Log.Value)
-                log.LogMessage("DLLKagScript.DLL_KAG_LoadScenario: " + file_name);
+                log.LogMessage("DLLKagScript.GoToLabel: " + label_name);
+        }
+
+        [HarmonyPatch(typeof(DLLKagScript), "LoadScenario")]
+        [HarmonyPrefix]
+        public static void LoadScenario(string file_name)
+        {
+            if (DLL_KAG_LoadScriptFile_Log.Value)
+                log.LogMessage("DLLKagScript.LoadScenario: " + file_name);
         }
 
 
-        [HarmonyPatch(typeof(DLLKagScript), "DLL_KAG_LoadScenarioString")]
+        [HarmonyPatch(typeof(DLLKagScript), "LoadScenarioString")]
         [HarmonyPrefix]
-        public static void DLL_KAG_LoadScenarioString(string scenario_str)
+        public static void LoadScenarioString(string scenario_str)
         {
             if (DLL_KAG_LoadScenarioStringLog.Value)
                 log.LogMessage("DLLKagScript.DLL_KAG_LoadScenarioString: " + scenario_str);
+        }        
+
+        [HarmonyPatch(typeof(DLLKagScript), "GetKey")]
+        [HarmonyPrefix]
+        public static void GetKey(string tag_name)
+        {
+            if (DLLKagScriptLog.Value)
+                log.LogMessage("DLLKagScript.GetKey: " + tag_name);
+        }        
+
+        [HarmonyPatch(typeof(DLLKagScript), "SetTagCallEnabled")]
+        [HarmonyPrefix]
+        public static void SetTagCallEnabled(string tag_name)
+        {
+            if (DLLKagScriptLog.Value)
+                log.LogMessage("DLLKagScript.SetTagCallEnabled: " + tag_name);
         }
 
-        [HarmonyPatch(typeof(DLLKagScript), "DLL_KAG_AddFinishFile")]
+        [HarmonyPatch(typeof(DLLKagScript), "SetTagReturnEnabled")]
         [HarmonyPrefix]
-        public static void DLL_KAG_AddFinishFile(string file_name)
+        public static void SetTagReturnEnabled(string tag_name)
         {
-            if (DLL_KAG_AddFinishFileLog.Value)
-                log.LogMessage("DLLKagScript.DLL_KAG_AddFinishFile: " + file_name);
-        }
-
-        [HarmonyPatch(typeof(DLLKagScript), "DLL_KAG_GetFinishFile")]
-        [HarmonyPrefix]
-        public static void DLL_KAG_GetFinishFile(string file_name)
-        {
-            if (DLL_KAG_AddFinishFileLog.Value)
-                log.LogMessage("DLLKagScript.DLL_KAG_GetFinishFile: " + file_name);
-        }
-
-        /// <summary>
-        /// DLLKagScript.DLL_KAG_AddTag: faceblend
-        /// </summary>
-        /// <param name="tag_name"></param>
-        [HarmonyPatch(typeof(DLLKagScript), "DLL_KAG_AddTag")]
-        [HarmonyPrefix]
-        public static void DLL_KAG_AddTag(string tag_name)
-        {
-            if (DLL_KAG_AddTagLog.Value)
-                log.LogMessage("DLLKagScript.DLL_KAG_AddTag: " + tag_name);
+            if (DLLKagScriptLog.Value)
+                log.LogMessage("DLLKagScript.SetTagReturnEnabled: " + tag_name);
         }
 
         #endregion
@@ -429,6 +461,30 @@ namespace COM3D2.DebugLilly.BepInExPlugin
                 ;
             }
 
+        }
+
+        #endregion
+
+        #region ScriptManagerFast
+
+        internal static ConfigEntry<bool> LoadScript_log;
+
+        [HarmonyPatch(typeof(ScriptManagerFast.BaseKagManagerFast), "LoadScript")]
+        [HarmonyPrefix]
+        public static void LoadScript(string f_strFileName)
+        {
+            if (LoadScript_log.Value)
+                log.LogMessage($"ScriptManagerFast.BaseKagManagerFast.LoadScript , {f_strFileName}");
+        }
+        
+        internal static ConfigEntry<bool> jump_log;
+
+        [HarmonyPatch(typeof(ScriptManagerFast.BaseKagManagerFast), "Jump")]
+        [HarmonyPrefix]
+        public static void Jump(string f_strLabelName)
+        {
+            if (jump_log.Value)
+                log.LogMessage($"ScriptManagerFast.BaseKagManagerFast.Jump , {f_strLabelName}");
         }
 
         #endregion
