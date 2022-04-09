@@ -1,11 +1,13 @@
 ﻿using BepInEx.Configuration;
 using BepInEx.Logging;
 using HarmonyLib;
+using MaidStatus;
 using PrivateMaidMode;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Yotogis;
 
 namespace COM3D2.DebugLilly.BepInExPlugin
 {
@@ -69,6 +71,9 @@ namespace COM3D2.DebugLilly.BepInExPlugin
 
             //
             YotogiPlayManagerLog = config.Bind("YotogiPlayManager", "Log", false);
+
+            //
+            YotogiSkillSystemLog = config.Bind("YotogiSkillSystem", "Log", false);
 
 
         }
@@ -608,5 +613,30 @@ namespace COM3D2.DebugLilly.BepInExPlugin
 
 
         #endregion
+
+        #region YotogiSkillSystem
+
+        internal static ConfigEntry<bool> YotogiSkillSystemLog;
+
+        [HarmonyPatch(typeof(YotogiSkillSystem), "Add",new Type[] { typeof(Skill.Data) })]
+        [HarmonyPrefix]
+        public static void YotogiSkillSystem_Add(YotogiSkillSystem __instance, Skill.Data data)
+        {
+            if (YotogiSkillSystemLog.Value)
+                log.LogMessage($"YotogiSkillSystem_Add , {__instance.status.fullNameEnStyle} , {data.category} , {data.id} , {data.name}");
+        }
+                
+        [HarmonyPatch(typeof(YotogiSkillSystem), "Remove", new Type[] { typeof(Skill.Data) })]
+        [HarmonyPrefix]
+        public static void YotogiSkillSystem_Remove(YotogiSkillSystem __instance, Skill.Data data)
+        {
+            if (YotogiSkillSystemLog.Value)
+                log.LogMessage($"YotogiSkillSystem_Remove , {__instance.status.fullNameEnStyle} , {data.category} , {data.id} , {data.name}");
+        }
+
+
+        #endregion
+
+
     }
 }
