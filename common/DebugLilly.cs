@@ -260,7 +260,11 @@ namespace COM3D2.DebugLilly.BepInExPlugin
             LogFolder(UTY.gameProjectPath + @"\scripts");
 
 
-
+            log.LogMessage($"---SceneManager--- {SceneManager.sceneCountInBuildSettings}");
+            for (int i = 0; i < SceneManager.sceneCountInBuildSettings; i++)
+            {                               
+                log.LogMessage($"{i} , {SceneUtility.GetScenePathByBuildIndex(i)}");
+            }
 
             log.LogMessage("=== GetGameInfo ed ===");
             /*
@@ -395,12 +399,40 @@ namespace COM3D2.DebugLilly.BepInExPlugin
                 log.LogWarning("Personal:" + e.ToString());
             }
 
+            // 여기선 의미 없음 
+            //log.LogMessage($"---SceneManager--- {SceneManager.sceneCountInBuildSettings}");
+            //for (int i = 0; i < SceneManager.sceneCountInBuildSettings; i++)
+            //{
+            //    var s = SceneManager.GetSceneByBuildIndex(i);
+            //    log.LogMessage($"{s.buildIndex} , {s.name} , {s.path}");
+            //}
+
+            //foreach (var item in SceneManager.GetAllScenes())
+            //{
+            //
+            //}
+
             log.LogMessage("=== GetGameInfo ed ===");
         }
 
         public void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
             log.LogMessage($"OnSceneLoaded , {scene.name} , {scene.buildIndex} , {stopwatch.Elapsed}");
+            //if (scene.name== "SceneLogo")
+            //{
+            //    log.LogMessage($"---SceneManager--- {SceneManager.sceneCount}");
+            //    for (int i = 0; i < SceneManager.sceneCount; i++)
+            //    {
+            //        var s=SceneManager.GetSceneAt(i);
+            //        log.LogMessage($"{s.buildIndex} , {s.name} , {s.path}");
+            //    }
+            //    log.LogMessage($"---SceneManager--- {SceneManager.sceneCountInBuildSettings}");
+            //    for (int i = 0; i < SceneManager.sceneCountInBuildSettings; i++)
+            //    {
+            //        var s=SceneManager.GetSceneByBuildIndex(i);
+            //        log.LogMessage($"{s.buildIndex} , {s.name} , {s.path}");
+            //    }
+            //}
         }
 
         public void OnDisable()
